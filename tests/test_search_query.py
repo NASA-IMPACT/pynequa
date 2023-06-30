@@ -1,7 +1,7 @@
 from sinequa_py import Sinequa
 import os 
 
-def test_search_dataset():
+def test_search_query():
     access_token=os.environ.get("SINEQUA_ACCESS_TOKEN")
     config={
         "base_url":"http://ec2-100-26-187-210.compute-1.amazonaws.com/api/v1",
@@ -10,4 +10,4 @@ def test_search_dataset():
         "query_name":"query"
     }
     sinequa=Sinequa(config=config)
-    sinequa.search_dataset()
+    print(sinequa.search_query(search_text="NASA"))

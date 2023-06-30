@@ -1,7 +1,15 @@
 import requests
 import os 
 class API:
-    base_url=""
+    '''
+        API Class handles all HTTP Requests 
+    
+        Attributes:        
+            base_url(string): REST API base URL for Sinequa instance
+            access_token(string): token for Sinequa authentication
+    '''
+    base_url: str 
+    access_token: str 
     def __init__(self, config) -> None:
         self.access_token=config["access_token"]
         self.base_url= config["base_url"]
@@ -21,6 +29,7 @@ class API:
         """
         session= requests.Session()
         resp=session.get(self._get_url(endpoint=endpoint), headers=self._get_headers)
+        session.close
         return resp.json()
 
     def post(self, endpoint, payload) -> dict:
@@ -28,6 +37,7 @@ class API:
             This method handles POST method.
         """
         session=requests.Session()
-        resp=session.post(self._get_url(endpoint=endpoint), headers=self._get_headers, json=payload)
+        headers=self._get_headers()
+        resp=session.post(self._get_url(endpoint=endpoint), headers=headers, json=payload)
         return resp.json()
 
