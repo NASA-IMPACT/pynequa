@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
-VERSION='0.1.0'
-requirements=[]
+VERSION = '0.1.0'
+requirements = []
 test_requirements = ['pytest>=3']
 
 setup(
