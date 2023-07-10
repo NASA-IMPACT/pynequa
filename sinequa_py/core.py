@@ -41,7 +41,8 @@ class Sinequa(API):
         }
         return self.post(endpoint=endpoint, payload=payload)
 
-    def search_dataset(self, parameters: Optional[Dict], datasets: Optional[List[str]]) -> Dict:
+    def search_dataset(self, parameters: Optional[Dict],
+                       datasets: Optional[List[str]]) -> Dict:
         '''
         This method retrieves datasets through SQL queries. The response is a
         list of available datasets with their respective names and descriptions. 
@@ -63,7 +64,8 @@ class Sinequa(API):
 
         return self.post(endpoint=endpoint, payload=payload)
 
-    def search_query(self, search_text: str, page_size: int = 10, page: int = 1, **kwargs) -> Dict:
+    def search_query(self, search_text: str, page_size: int = 10,
+                     page: int = 1, **kwargs) -> Dict:
         '''
         This method performs search query.
 
@@ -106,7 +108,8 @@ class Sinequa(API):
 
         return self.post(endpoint=endpoint, payload=payload)
 
-    def search_profile(self, profile_name: str, response_type: str = "SearchCursor", **kwargs) -> Dict:
+    def search_profile(self, profile_name: str,
+                       response_type: str = "SearchCursor", **kwargs) -> Dict:
         '''
         This method searches for Sienequa profile. 
 
@@ -128,32 +131,56 @@ class Sinequa(API):
 
         return self.post(endpoint=endpoint, payload=payload)
 
-    def search_user_settings(self, app_name: str, action: str = "load", user_settings: Dict = {}) -> Dict:
+    def search_user_settings(self, action: str = "load", user_settings: Dict = {}) -> Dict:
         '''
         This method provides user settings 
 
         Args:
             app_name(str): name of application for which user setting should be handled
             action(str): search action (load|save|patch)
-            user_settings(Dict): user settings to be saved or patched (see official documentation for more info)
+            user_settings(Dict): user settings to be saved or patched (see official 
+            documentation for more info)
 
         Returns: 
             Dict: search response based upon action 
         '''
         endpoint = "search.usersettings"
         payload = {
-            "app": app_name,
+            "app": self.app_name,
             "action": action,
             "userSettings": user_settings,
         }
 
         return self.post(endpoint=endpoint, payload=payload)
 
-    def search_preview(self):
+    def search_preview(self,   text: str, action: str = "get", origin: str = "", id: str = "",
+                       **kwargs) -> Dict:
         '''
+        This method retrieves preview data for a product. 
+
+        Args:
+            text(str): text to be searched
+            action(str): retrieves a preview object
+            origin(str): server address of the SBA in browser used to load CSS
+            id(str): id of document for which to retrieve the preview
+
+        Returns:
+            Dict: response for for Search Preview
         '''
         endpoint = "search.preview"
-        pass
+        query_params = {
+            "query": self.query_name,
+            "text": text,
+        }
+        payload = {
+            "app": self.app_name,
+            "action": action,
+            "id": id,
+            "origin": origin,
+            "query": self._prepare_kwargs(query_params, kwargs=kwargs)
+        }
+
+        return self.post(endpoint=endpoint, payload=payload)
 
     def search_query_export(self):
         '''
