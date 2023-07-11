@@ -182,17 +182,54 @@ class Sinequa(API):
 
         return self.post(endpoint=endpoint, payload=payload)
 
-    def search_query_export(self):
+    def search_query_export(self, web_service: str, type: str, format: str,
+                            name: str, max_count: int) -> Dict:
         '''
+        This method allows exporting of search results in different formats.
+
+        Args:
+            web_service(str): name of query export web service
+            type(str): type of export to perform
+            format(str): output format of export
+            name(str): name of saved query to be exported (optional)
+            max_count(int): maximum of number of documents to include in export (optional)
+
+        Returns:
+            Dict: response for search export 
         '''
         endpoint = "search.queryexport"
-        pass
+        payload = {
+            "app": self.app_name,
+            "webService": web_service,
+            "type": type,
+            "format": format,
+        }
 
-    def search_recent_queries(self):
+        if name != "":
+            payload["name"]: name
+
+        if max_count > 0:
+            payload["maxCount"] = max_count
+
+        return self.post(endpoint=endpoint, payload=payload)
+
+    def search_recent_queries(self, action: str = "load") -> Dict:
         '''
+        This method retrieves the current recent queries.
+
+        Args:
+            action(str): Retrieve recent queries, default=load
+
+        Returns:
+            Dict: response for recent queries
         '''
         endpoint = "search.recentqueries"
-        pass
+
+        payload = {
+            "app": self.app_name,
+            "action": action,
+        }
+        return self.post(endpoint=endpoint, payload=payload)
 
     def search_similardocuments(self):
         '''
