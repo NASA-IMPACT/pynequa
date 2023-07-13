@@ -1,4 +1,5 @@
 from sinequa_py import Sinequa
+from sinequa_py.models import QueryParams
 import os
 
 
@@ -10,6 +11,9 @@ def test_search_query():
         "app_name": "vanilla-search",
         "query_name": "query"
     }
+    query_params = QueryParams()
+    query_params.search_text = "NASA"
+
     sinequa = Sinequa(config=config)
-    print(sinequa.search_query(search_text="NASA"))
+    print(sinequa.search_query(query_params=query_params))
     # TODO: check/assert search response

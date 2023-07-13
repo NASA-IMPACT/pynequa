@@ -1,5 +1,6 @@
 from sinequa_py.api import API
 from typing import Optional, List, Dict
+from sinequa_py.models import QueryParams
 
 
 class Sinequa(API):
@@ -64,36 +65,37 @@ class Sinequa(API):
 
         return self.post(endpoint=endpoint, payload=payload)
 
-    def search_query(self, search_text: str, page_size: int = 10,
-                     page: int = 1, **kwargs) -> Dict:
+    def search_query(self, query_params: QueryParams) -> Dict:
         '''
         This method performs search query.
 
         Args:
-            search_text(str): text to search
-            page_size(int): number of results in a page
-            page(int): page number 
+            query_params(QueryParams): query parameters as defined in QueryParams class 
 
         Returns:
             Dict: response data of this request 
         '''
         endpoint = "search.query"
 
-        query_parameters = {
-            "name": self.query_name,
-            "action": "search",
-            "text": search_text,
-            "pageSize": page_size,
-            "page": page
-        }
-
         payload = {
             "app": self.app_name,
-            "query": self._prepare_kwargs(query_parameters, kwargs=kwargs),
+            "query": query_params._prepare_query_args(
+                query_name=self.query_name)
         }
+
         return self.post(endpoint=endpoint, payload=payload)
 
-    def query_intent(self, intent_text: str, **kwargs):
+    def query_intent(self, intent_text: str) -> Dict:
+        '''
+        This method evaluates SBA query intents from query intent sets. 
+
+        Args:
+            intent_text(str): indicates the text that should trigger query intent
+
+        Returns:
+            Dict: Query Intent response 
+
+        '''
         endpoint = "queryintent"
 
         query_parameters = {
@@ -103,20 +105,20 @@ class Sinequa(API):
         payload = {
             "app": self.app_name,
             "name": self.query_name,
-            "query": self._prepare_kwargs(query_parameters, kwargs=kwargs),
+            "query": query_parameters,
         }
 
         return self.post(endpoint=endpoint, payload=payload)
 
     def search_profile(self, profile_name: str,
-                       response_type: str = "SearchCursor", **kwargs) -> Dict:
+                       query_params: QueryParams, response_type: str = "SearchCursor") -> Dict:
         '''
         This method searches for Sienequa profile. 
 
         Args:
             profile_name(str): profile name
             response_type(str): default will be SearchCursor 
-            kwargs: will carry optional query parameters in payload
+            query_params(QueryParams): will carry  query parameters in payload
 
         Returns: 
             Dict: response data for Sinequa profile search.
@@ -126,7 +128,7 @@ class Sinequa(API):
         payload = {
             "profile": profile_name,
             "responsetype": response_type,
-            "query": self._prepare_kwargs({}, kwargs=kwargs),
+            "query": query_params._prepare_query_args(query_name=self.query_name),
         }
 
         return self.post(endpoint=endpoint, payload=payload)
@@ -153,13 +155,13 @@ class Sinequa(API):
 
         return self.post(endpoint=endpoint, payload=payload)
 
-    def search_preview(self,   text: str, action: str = "get", origin: str = "", id: str = "",
+    def search_preview(self,   query_params: QueryParams, action: str = "get", origin: str = "", id: str = "",
                        **kwargs) -> Dict:
         '''
         This method retrieves preview data for a product. 
 
         Args:
-            text(str): text to be searched
+            query_params(QueryParams): query params with text to be searched
             action(str): retrieves a preview object
             origin(str): server address of the SBA in browser used to load CSS
             id(str): id of document for which to retrieve the preview
@@ -168,16 +170,14 @@ class Sinequa(API):
             Dict: response for for Search Preview
         '''
         endpoint = "search.preview"
-        query_params = {
-            "query": self.query_name,
-            "text": text,
-        }
+
         payload = {
             "app": self.app_name,
             "action": action,
             "id": id,
             "origin": origin,
-            "query": self._prepare_kwargs(query_params, kwargs=kwargs)
+            "query": query_params._prepare_query_args(
+                query_name=self.query_name)
         }
 
         return self.post(endpoint=endpoint, payload=payload)
@@ -231,11 +231,24 @@ class Sinequa(API):
         }
         return self.post(endpoint=endpoint, payload=payload)
 
-    def search_similardocuments(self):
+    def search_similardocuments(self, source_doc_id: str, query_params: QueryParams) -> Dict:
         '''
+        This method retrieves similar documents to a given document
+
+        Args:
+            source_doc_id(str): identifier of document for which to retrieve similar documents
+            query_params(QueryParams): query params 
         '''
         endpoint = "search.similardocuments"
-        pass
+
+        payload = {
+            "app": self.app_name,
+            "sourceDocumentId": source_doc_id,
+            "query": query_params._prepare_query_args(
+                query_name=self.query_name)
+        }
+
+        return self.post(endpoint=endpoint, payload=payload)
 
     def search_query_links(self):
         '''
