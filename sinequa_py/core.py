@@ -1,6 +1,6 @@
 from sinequa_py.api import API
 from typing import Optional, List, Dict
-from sinequa_py.models import QueryParams
+from sinequa_py.models import QueryParams, TreeParams
 
 
 class Sinequa(API):
@@ -110,8 +110,8 @@ class Sinequa(API):
 
         return self.post(endpoint=endpoint, payload=payload)
 
-    def search_profile(self, profile_name: str,
-                       query_params: QueryParams, response_type: str = "SearchCursor") -> Dict:
+    def search_profile(self, profile_name: str, query_params: QueryParams,
+                       response_type: str = "SearchCursor") -> Dict:
         '''
         This method searches for Sienequa profile. 
 
@@ -133,7 +133,8 @@ class Sinequa(API):
 
         return self.post(endpoint=endpoint, payload=payload)
 
-    def search_user_settings(self, action: str = "load", user_settings: Dict = {}) -> Dict:
+    def search_user_settings(self, action: str = "load",
+                             user_settings: Dict = {}) -> Dict:
         '''
         This method provides user settings 
 
@@ -155,8 +156,8 @@ class Sinequa(API):
 
         return self.post(endpoint=endpoint, payload=payload)
 
-    def search_preview(self,   query_params: QueryParams, action: str = "get", origin: str = "", id: str = "",
-                       **kwargs) -> Dict:
+    def search_preview(self,   query_params: QueryParams, action: str = "get",
+                       origin: str = "", id: str = "") -> Dict:
         '''
         This method retrieves preview data for a product. 
 
@@ -192,7 +193,7 @@ class Sinequa(API):
             type(str): type of export to perform
             format(str): output format of export
             name(str): name of saved query to be exported (optional)
-            max_count(int): maximum of number of documents to include in export (optional)
+            max_count(int): maximum of number of documents to include in export(optiona)
 
         Returns:
             Dict: response for search export 
@@ -231,13 +232,17 @@ class Sinequa(API):
         }
         return self.post(endpoint=endpoint, payload=payload)
 
-    def search_similardocuments(self, source_doc_id: str, query_params: QueryParams) -> Dict:
+    def search_similardocuments(self, source_doc_id: str,
+                                query_params: QueryParams) -> Dict:
         '''
         This method retrieves similar documents to a given document
 
         Args:
             source_doc_id(str): identifier of document for which to retrieve similar documents
             query_params(QueryParams): query params 
+
+        Returns: 
+            Dict: search response for similar documents 
         '''
         endpoint = "search.similardocuments"
 
@@ -250,23 +255,79 @@ class Sinequa(API):
 
         return self.post(endpoint=endpoint, payload=payload)
 
-    def search_query_links(self):
+    def search_query_links(self, web_sevice: str, query_params: QueryParams) -> Dict:
         '''
+        This method retrieves sponsored links for the passed query. 
+
+        Args:
+            web_service(str): name of corresponding sponsored links web service
+        Returns: 
+            Dict: response for query links search 
+
         '''
         endpoint = "search.querylinks"
-        pass
+        payload = {
+            "webService": web_sevice,
+            "query": query_params._prepare_query_args(
+                query_name=self.query_name)
+        }
+        return self.post(endpoint=endpoint, payload=payload)
 
-    def search_ratings(self):
+    def search_ratings(self, action: str, docid: str, ratings_column: str,
+                       avg_column: str, ratings_distribution: List[str], rating: int,
+                       update_doc_weight: bool) -> Dict:
         '''
+        This method makes it possible to get, set and delete ratings associated with a 
+        document. 
+
+        Args:
+            action(str): get|set|delete
+            docid(str): document id 
+            ratings_column(str): name of column in which to store rating
+            avg_column(str): name of column to store average rating
+            ratings_distribution(List[str]): array of possible ratings
+            rating(int): sets the action parameter (optional)
+            update_doc_weight(bool): indicates whether to update the doc weight 
+                                    according to rating (optional)
+        Returns: 
+            Dict: response for ratings search 
         '''
         endpoint = "search.ratings"
-        pass
+        payload = {
+            "action": action,
+            "docid": docid,
+            "ratingsColumn": ratings_column,
+            "averageColumn": avg_column,
+            "ratingsDistribution": ratings_distribution,
+            "updateDocWeight": update_doc_weight,
+        }
 
-    def search_profile_subtree(self):
+        if len(rating) > 0:
+            payload["rating"] = rating
+
+        return self.post(endpoint=endpoint, payload=payload)
+
+    def search_profile_subtree(self, profile: str, query_params: QueryParams,
+                               tree_params: TreeParams) -> Dict:
         '''
+        This method allows to select a subtree. 
+
+        Args: 
+            profile(str): profile name
+            query_params(QueryParams): search parameters 
+            tree_params(TreeParams): defines the sub-tree to retrieve
+
+        Returns: 
+            Dict: returns subtree profile response 
         '''
         endpoint = "search.profile.subtree"
-        pass
+        payload = {
+            "profile": profile,
+            "query": query_params._prepare_query_args(
+                query_name=self.query_name),
+            "tree": tree_params._generate_tree_params_payload(),
+        }
+        return self.post(endpoint=endpoint, payload=payload)
 
     def search_alerts(self):
         '''

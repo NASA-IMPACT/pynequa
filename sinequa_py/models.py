@@ -1,6 +1,21 @@
 from typing import Dict, List
 
 
+class TreeParams:
+    box: str = ""
+    column: str = ""
+    op: str = ""
+    value: str = ""
+
+    def _generate_tree_params_payload(self) -> Dict:
+        return {
+            "box": self.box,
+            "column": self.column,
+            "op": self.op,
+            "value": self.value,
+        }
+
+
 class SelectParams:
     expression: str = ""
     facet: str = ""
