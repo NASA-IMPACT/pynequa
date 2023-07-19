@@ -1,6 +1,9 @@
 # Pynequa
 A python library to handle communication with Sinequa REST API. 
 
+[![Documentation Status](https://readthedocs.org/projects/pynequa/badge/?version=latest)](https://pynequa.readthedocs.io/en/latest/?badge=latest)
+
+
 ## Installation 
 
 ```
