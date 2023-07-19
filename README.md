@@ -42,6 +42,6 @@ Make sure to name your branch as: `feature/{issue_number}/{branch-name}` and sen
 
 ## License
 
-Distributed under the terms of the [MIT license][LICENSE],
+Distributed under the terms of the [MIT license](LICENSE),
 `pynequa` is free and open source software.
 
