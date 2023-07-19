@@ -12,7 +12,7 @@ dist/
 
 #misc
 .DS_Store
-sinequa_py.egg-info 
+pynequa.egg-info 
 
 #build
 build/

@@ -1,5 +1,5 @@
-from sinequa_py import Sinequa
-from sinequa_py.models import QueryParams
+from pynequa import Sinequa
+from pynequa.models import QueryParams
 import os
 
 

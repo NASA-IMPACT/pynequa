@@ -1,4 +1,4 @@
-from sinequa_py import Sinequa
+from pynequa import Sinequa
 import os
 
 

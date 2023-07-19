@@ -1,6 +1,6 @@
-from sinequa_py.api import API
+from pynequa.api import API
 from typing import Optional, List, Dict
-from sinequa_py.models import QueryParams, TreeParams
+from pynequa.models import QueryParams, TreeParams
 
 
 class Sinequa(API):
