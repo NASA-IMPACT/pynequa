@@ -19,3 +19,8 @@ build/
 
 #git
 .github/
+
+#docs
+docs/_build
+docs/_static
+docs/_templates 
