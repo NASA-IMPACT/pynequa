@@ -1,9 +1,8 @@
-name: Run Bash Program
+name: Package Build Check
 
 on:
-  push:
-    branches:
-      - feature/5/pynequa-add-auto-build-and-test-scripts  # Change this to your main branch name, e.g., master, if it's different
+  - push
+  - pull_request
 
 jobs:
   build:

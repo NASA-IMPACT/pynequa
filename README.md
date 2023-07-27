@@ -38,10 +38,10 @@ Implement following REST endpoints to manage search request with Sinequa API.
 Check [DEVELOPERS GUIDE](DEVELOPMENT.md) for details. 
 ## Contributing
 
-When contributing to this repository, please first discuss the change you wish to make via issue, email, or any other method with the authors of this repository before making a change.
+When contributing to this repository, please first discuss the change you wish to make via issue, email, or any other method with the authors of this repository before making a change. 
 
 `Tips:`
-Make sure to name your branch as: `feature/{issue_number}/{branch-name}` and send a pull request to `develop` branch. Write quality commit messages. 
+Make sure to name your branch as: `feature/{issue_number}/{branch-name}` and send a pull request to `develop` branch. Write quality commit messages. Before merge, the `PR commits must be squashed` first.
 
 ## License
 
