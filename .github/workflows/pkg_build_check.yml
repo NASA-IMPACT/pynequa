@@ -2,7 +2,6 @@ name: Package Build Check
 
 on:
   - push
-  - pull_request
 
 jobs:
   build:
