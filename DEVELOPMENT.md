@@ -37,10 +37,15 @@ pytest -s tests/<file_name>.py
 
 ## Tips 
 
-When new packages are installed, update requirements.txt using:
-```
-pipreqs --force
-```
+- When new packages are installed, update requirements.txt using:
+    ```
+    pipreqs --force
+    ```
+- Make sure to name your branch as: `feature/{issue_number}/{branch-name}`
+- Send a pull request to `develop` branch. 
+- Write quality commit messages.
+- Before merge, the `PR commits must be squashed` first.
+
 
 ## Publish to pypi 
 See this [resource](https://packaging.python.org/en/latest/tutorials/packaging-projects/) to learn more about how to publish this package to pypi.org 
