@@ -9,7 +9,7 @@ A python library to handle communication with Sinequa REST API.
 ## Installation 
 
 ```
-   $ pip install -i https://test.pypi.org/simple/ pynequa
+   $ pip install pynequa
 ```
 ## Feature Roadmap 
 Implement following REST endpoints to manage requests with Sinequa API. 
