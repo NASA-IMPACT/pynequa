@@ -325,7 +325,7 @@ class Sinequa(API):
             "profile": profile,
             "query": query_params._prepare_query_args(
                 query_name=self.query_name),
-            "tree": tree_params._generate_tree_params_payload(),
+            "tree": tree_params._generate_tree_params_payload()
         }
         return self.post(endpoint=endpoint, payload=payload)
 

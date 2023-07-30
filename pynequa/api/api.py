@@ -33,7 +33,7 @@ class API:
         """
         session = requests.Session()
         resp = session.get(self._get_url(endpoint=endpoint),
-                           headers=self._get_headers)
+                           headers=self._get_headers())
         session.close
         return resp.json()
 
@@ -42,7 +42,6 @@ class API:
             This method handles POST method.
         """
         session = requests.Session()
-        headers = self._get_headers()
         resp = session.post(self._get_url(endpoint=endpoint),
-                            headers=headers, json=payload)
+                            headers=self._get_headers(), json=payload)
         return resp.json()

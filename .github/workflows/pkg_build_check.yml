@@ -1,0 +1,23 @@
+name: Package Build Check
+
+on:
+  - push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Bash environment
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bash
+
+      - name: Make build script executable
+        run: chmod +x install.sh
+
+      - name: Run the Bash script
+        run: ./install.sh
