@@ -11,8 +11,37 @@ A python library to handle communication with Sinequa REST API.
 ```
    $ pip install pynequa
 ```
+
+## Example Usage
+```
+import pynequa 
+from pynequa.models import QueryParams
+
+# provide following config parameters 
+config = {
+   "base_url": "", 
+   "app_name": "", 
+   "access_token":"",
+   "query_name": ""
+}
+
+#initialize a Sinequa connector instance 
+sinequa=pynequa.Sinequa(config=config)
+
+params = QueryParams()
+params.search_text = "<your_search_text>"
+..... #other params 
+
+#perform a search query operation 
+results=sinequa.search_query(params)
+```
+
+
 ## Feature Roadmap 
 Implement following REST endpoints to manage requests with Sinequa API. 
+
+
+
 
 **Search Endpoints:**
 - [x] search.app 
