@@ -1,6 +1,6 @@
 from pynequa.api import API
 from typing import Optional, List, Dict
-from pynequa.models import QueryParams, TreeParams
+from pynequa.models import QueryParams, TreeParams, AlertParams
 
 
 class Sinequa(API):
@@ -329,11 +329,27 @@ class Sinequa(API):
         }
         return self.post(endpoint=endpoint, payload=payload)
 
-    def search_alerts(self):
+    def search_alerts(self, action: str, alert: AlertParams, name: str = "", old_name: str = ""):
         '''
+        This method makes it possible to manage alerts in search.alerts endpoint.
+
+        Args:
+            action(str): action name, options: [list, create, read, update, delete]
+            alert_params(AlertParams): parameters for alert configuration
+            name(str): name of alert to be read [OPTIONAL]
+            old_name(str): name of alert before you change it [OPTIONAL]
+
+        Returns:
+            Dict: returns a JSON response with listing alerts
         '''
         endpoint = "search.alerts"
-        pass
+        payload = {
+            "action": action,
+            "alert": alert._prepare_alert_params_payload(),
+            "name": name,
+            "oldName": old_name
+        }
+        return self.post(endpoint=endpoint, payload=payload)
 
     def search_baskets(self):
         '''
