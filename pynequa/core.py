@@ -9,7 +9,7 @@ class Sinequa(API):
 
         Attributes:
             app_name(str): name of Sinequa app
-            query_name(str): name of search query web service 
+            query_name(str): name of search query web service
     '''
     app_name: str
     query_name: str
@@ -28,10 +28,10 @@ class Sinequa(API):
 
     def search_app(self, pre_login: bool = False, mode: str = "debug") -> Dict:
         '''
-            This method retrieves SBA configuration before and after login. 
+            This method retrieves SBA configuration before and after login.
 
-            Args: 
-                pre_login(bool): false by default. 
+            Args:
+                pre_login(bool): false by default.
                 mode(str): debug by default (debug|release)
         '''
         endpoint = "search.app"
@@ -46,13 +46,13 @@ class Sinequa(API):
                        datasets: Optional[List[str]]) -> Dict:
         '''
         This method retrieves datasets through SQL queries. The response is a
-        list of available datasets with their respective names and descriptions. 
+        list of available datasets with their respective names and descriptions.
 
         Args:
             parameters(dict): dictionary of parameters that can be used in SQL fragments
             datasets(list): list of datasets
         Returns:
-            Dict: search dataset response  
+            Dict: search dataset response
 
         '''
         endpoint = "search.dataset"
@@ -70,10 +70,10 @@ class Sinequa(API):
         This method performs search query.
 
         Args:
-            query_params(QueryParams): query parameters as defined in QueryParams class 
+            query_params(QueryParams): query parameters as defined in QueryParams class
 
         Returns:
-            Dict: response data of this request 
+            Dict: response data of this request
         '''
         endpoint = "search.query"
 
@@ -87,13 +87,13 @@ class Sinequa(API):
 
     def query_intent(self, intent_text: str) -> Dict:
         '''
-        This method evaluates SBA query intents from query intent sets. 
+        This method evaluates SBA query intents from query intent sets.
 
         Args:
             intent_text(str): indicates the text that should trigger query intent
 
         Returns:
-            Dict: Query Intent response 
+            Dict: Query Intent response
 
         '''
         endpoint = "queryintent"
@@ -113,14 +113,14 @@ class Sinequa(API):
     def search_profile(self, profile_name: str, query_params: QueryParams,
                        response_type: str = "SearchCursor") -> Dict:
         '''
-        This method searches for Sienequa profile. 
+        This method searches for Sienequa profile.
 
         Args:
             profile_name(str): profile name
-            response_type(str): default will be SearchCursor 
+            response_type(str): default will be SearchCursor
             query_params(QueryParams): will carry  query parameters in payload
 
-        Returns: 
+        Returns:
             Dict: response data for Sinequa profile search.
         '''
         endpoint = "search.profile"
@@ -136,16 +136,16 @@ class Sinequa(API):
     def search_user_settings(self, action: str = "load",
                              user_settings: Dict = {}) -> Dict:
         '''
-        This method provides user settings 
+        This method provides user settings
 
         Args:
             app_name(str): name of application for which user setting should be handled
             action(str): search action (load|save|patch)
-            user_settings(Dict): user settings to be saved or patched (see official 
+            user_settings(Dict): user settings to be saved or patched (see official
             documentation for more info)
 
-        Returns: 
-            Dict: search response based upon action 
+        Returns:
+            Dict: search response based upon action
         '''
         endpoint = "search.usersettings"
         payload = {
@@ -159,7 +159,7 @@ class Sinequa(API):
     def search_preview(self,   query_params: QueryParams, action: str = "get",
                        origin: str = "", id: str = "") -> Dict:
         '''
-        This method retrieves preview data for a product. 
+        This method retrieves preview data for a product.
 
         Args:
             query_params(QueryParams): query params with text to be searched
@@ -196,7 +196,7 @@ class Sinequa(API):
             max_count(int): maximum of number of documents to include in export(optiona)
 
         Returns:
-            Dict: response for search export 
+            Dict: response for search export
         '''
         endpoint = "search.queryexport"
         payload = {
@@ -239,10 +239,10 @@ class Sinequa(API):
 
         Args:
             source_doc_id(str): identifier of document for which to retrieve similar documents
-            query_params(QueryParams): query params 
+            query_params(QueryParams): query params
 
-        Returns: 
-            Dict: search response for similar documents 
+        Returns:
+            Dict: search response for similar documents
         '''
         endpoint = "search.similardocuments"
 
@@ -257,12 +257,12 @@ class Sinequa(API):
 
     def search_query_links(self, web_sevice: str, query_params: QueryParams) -> Dict:
         '''
-        This method retrieves sponsored links for the passed query. 
+        This method retrieves sponsored links for the passed query.
 
         Args:
             web_service(str): name of corresponding sponsored links web service
-        Returns: 
-            Dict: response for query links search 
+        Returns:
+            Dict: response for query links search
 
         '''
         endpoint = "search.querylinks"
@@ -277,20 +277,20 @@ class Sinequa(API):
                        avg_column: str, ratings_distribution: List[str], rating: int,
                        update_doc_weight: bool) -> Dict:
         '''
-        This method makes it possible to get, set and delete ratings associated with a 
-        document. 
+        This method makes it possible to get, set and delete ratings associated with a
+        document.
 
         Args:
             action(str): get|set|delete
-            docid(str): document id 
+            docid(str): document id
             ratings_column(str): name of column in which to store rating
             avg_column(str): name of column to store average rating
             ratings_distribution(List[str]): array of possible ratings
             rating(int): sets the action parameter (optional)
-            update_doc_weight(bool): indicates whether to update the doc weight 
+            update_doc_weight(bool): indicates whether to update the doc weight
                                     according to rating (optional)
-        Returns: 
-            Dict: response for ratings search 
+        Returns:
+            Dict: response for ratings search
         '''
         endpoint = "search.ratings"
         payload = {
@@ -310,15 +310,15 @@ class Sinequa(API):
     def search_profile_subtree(self, profile: str, query_params: QueryParams,
                                tree_params: TreeParams) -> Dict:
         '''
-        This method allows to select a subtree. 
+        This method allows to select a subtree.
 
-        Args: 
+        Args:
             profile(str): profile name
-            query_params(QueryParams): search parameters 
+            query_params(QueryParams): search parameters
             tree_params(TreeParams): defines the sub-tree to retrieve
 
-        Returns: 
-            Dict: returns subtree profile response 
+        Returns:
+            Dict: returns subtree profile response
         '''
         endpoint = "search.profile.subtree"
         payload = {
@@ -371,8 +371,23 @@ class Sinequa(API):
         endpoint = "suggestField"
         pass
 
-    def engine_sql(self):
+    def engine_sql(self, sql: str, max_rows: int = 1000) -> Dict:
         '''
+        This method runs classic SQL query on the database engine.
+
+        Args:
+            sql (str): Query to send
+            max_rows (int): Maximum number of rows a query can return (default: 1000)
+        Returns:
+            Dict: response for sql query
         '''
         endpoint = "engine.sql"
-        pass
+
+        payload = {
+            "sql": sql,
+            "maxRows": 1000,
+            "pretty": True,
+            "output": "json"
+        }
+
+        return self.post(endpoint=endpoint, payload=payload)
