@@ -14,7 +14,6 @@ class Sinequa(API):
             base_url(str): base URL for hosted Sinequa instance
             app_name(str): name of Sinequa app
             query_name(str): name of search query web service
-
     '''
 
     def __init__(
@@ -404,8 +403,23 @@ class Sinequa(API):
         endpoint = "suggestField"
         pass
 
-    def engine_sql(self):
+    def engine_sql(self, sql: str, max_rows: int = 1000) -> Dict:
         '''
+        This method runs classic SQL query on the database engine.
+
+        Args:
+            sql (str): Query to send
+            max_rows (int): Maximum number of rows a query can return (default: 1000)
+        Returns:
+            Dict: response for sql query
         '''
         endpoint = "engine.sql"
-        pass
+
+        payload = {
+            "sql": sql,
+            "maxRows": 1000,
+            "pretty": True,
+            "output": "json"
+        }
+
+        return self.post(endpoint=endpoint, payload=payload)
