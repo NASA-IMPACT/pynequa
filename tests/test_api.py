@@ -18,7 +18,7 @@ class TestAPI(unittest.TestCase):
         mock_get.return_value.status_code = 200
         mock_get.return_value.json.return_value = sample_response
 
-        api = API(mock_config)
+        api = API(mock_config["access_token"], mock_config["base_url"])
         resp = api.get("search.query")
 
         self.assertEqual(resp.status_code, 200)
@@ -29,7 +29,7 @@ class TestAPI(unittest.TestCase):
         mock_post.return_value.status_code = 200
         mock_post.return_value.json.return_value = sample_response
 
-        api = API(mock_config)
+        api = API(mock_config["access_token"], mock_config["base_url"])
         endpoint = "search.query"
         payload = {
             "app": "sba",

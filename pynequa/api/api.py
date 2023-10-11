@@ -1,22 +1,24 @@
-import requests
-import os
 from typing import Dict
+
+import os
+import requests
 
 
 class API:
     '''
-        API Class handles all HTTP Requests 
+        API Class handles all HTTP Requests
 
-        Attributes:        
+        Attributes:
             base_url(string): REST API base URL for Sinequa instance
             access_token(string): token for Sinequa authentication
     '''
-    base_url: str
-    access_token: str
 
-    def __init__(self, config) -> None:
-        self.access_token = config["access_token"]
-        self.base_url = config["base_url"]
+    def __init__(self, access_token: str, base_url: str) -> None:
+        if not access_token or not base_url:
+            raise ValueError("access_token and base_url must not be empty")
+
+        self.access_token = access_token
+        self.base_url = base_url
 
     def _get_headers(self) -> Dict:
         headers = {
