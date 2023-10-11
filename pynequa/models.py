@@ -172,3 +172,53 @@ class QueryParams:
             params["advanced"] = self.advanced._generate_advanced_params_payload()
 
         return params
+
+
+class AlertParams:
+    name: str = ""
+    description: str = ""
+    profile: str = ""
+    timezone: str = ""
+    frequency: str = ""
+    days: str = ""
+    alert_from: str = ""
+    alert_to: str = ""
+    times: str = ""  # format: HH:mm
+    active: bool = False
+    combine_with_other_alerts: bool = False
+    respect_tab_selection: bool = False
+
+    def __init__(self) -> None:
+        return
+
+    def _prepare_alert_params_payload(self) -> Dict:
+        params = {
+            "name": self.name,
+            "description": self.description,
+            "active": self.active,
+            "combineWithOtherAlerts": self.combine_with_other_alerts,
+            "respectTabSelection": self.respect_tab_selection
+        }
+
+        if self.profile is not None:
+            params["profile"] = self.profile
+
+        if self.timezone is not None:
+            params["timezone"] = self.timezone
+
+        if self.frequency is not None:
+            params["frequency"] = self.frequency
+
+        if self.days is not None:
+            params["days"] = self.days
+
+        if self.alert_from is not None:
+            params["from"] = self.alert_from
+
+        if self.alert_to is not None:
+            params["to"] = self.alert_to
+
+        if self.times is not None:
+            params["times"] = self.times
+
+        return params
