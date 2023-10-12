@@ -54,31 +54,31 @@ class AdvancedParams:
 
 class QueryParams:
     name: str = ""  # required
-    action: str = ""
+    action: str = None
     search_text: str = ""  # required
     select_params: List[SelectParams] = []
-    additional_select_clause: str = ""
-    additional_where_clause: str = ""
+    additional_select_clause: str = None
+    additional_where_clause: str = None
     open_params: List[OpenParams] = []
     page: int = 0
     page_size: int = 0
-    tab: str = ""
-    scope: str = ""
-    basket: str = ""
+    tab: str = None
+    scope: str = None
+    basket: str = None
     is_first_page: bool = False
     strict_refine: bool = False
-    global_relevance: int = 0
-    question_language: str = ""
-    question_default_language: str = ""
-    spelling_correction_mode: str = ""
-    spelling_correction_filter: str = ""
-    document_weight: str = ""
-    text_part_weights: str = ""
-    relevance_transforms: str = ""
+    global_relevance: int = None
+    question_language: str = None
+    question_default_language: str = None
+    spelling_correction_mode: str = None
+    spelling_correction_filter: str = None
+    document_weight: str = None
+    text_part_weights: str = None
+    relevance_transforms: str = None
     remove_duplicates: bool = False
     aggregations: List[str] = []
-    order_by: str = ""
-    group_by: str = ""
+    order_by: str = None
+    group_by: str = None
     advanced: AdvancedParams = AdvancedParams()
 
     def __init__(self) -> None:
