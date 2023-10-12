@@ -1,5 +1,7 @@
-from pynequa.api import API
+from __future__ import annotations
 from typing import Optional, List, Dict
+
+from pynequa.api import API
 from pynequa.models import QueryParams, TreeParams
 
 
@@ -8,17 +10,47 @@ class Sinequa(API):
         Sinequa API Client for Python
 
         Attributes:
+            access_token(str): authentication token for Sinequa
+            base_url(str): base URL for hosted Sinequa instance
             app_name(str): name of Sinequa app
             query_name(str): name of search query web service
     '''
-    app_name: str
-    query_name: str
 
-    def __init__(self, config: Dict) -> None:
-        super().__init__(config)
-        self.app_name = config["app_name"]  # name of application
+    def __init__(
+            self,
+            access_token: str,
+            base_url: str,
+            app_name: str = "vanilla-search",
+            query_name: str = "query",
+    ) -> None:
+        super().__init__(access_token=access_token, base_url=base_url)
+        self.app_name = app_name  # name of application
         # name of search query web service
-        self.query_name = config["query_name"]
+        self.query_name = query_name
+
+    @classmethod
+    def from_config(cls, cfg: Dict) -> Sinequa:
+        '''
+        This method creates an instance of Sinequa class from a configuration
+        dictionary.
+
+        Args:
+            cfg (Dict): A dictionary containing configuration parameters.
+                It should include the following keys:
+                - "access_token": A valid access token for authentication.
+                - "base_url": The base URL for the Sinequa API.
+                - "app_name": Name of the Sinequa application.
+                - "query_name": Name of the search query service.
+
+        Returns:
+            Sinequa: An instance of Sinequa class initialized with given configuration
+        '''
+        return cls(
+            access_token=cfg["access_token"],
+            base_url=cfg["base_url"],
+            app_name=cfg["app_name"],
+            query_name=cfg["query_name"],
+        )
 
     @staticmethod
     def _prepare_kwargs(payload: Dict, kwargs: Dict) -> Dict:
