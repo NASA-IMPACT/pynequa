@@ -25,14 +25,23 @@ config = {
    "query_name": ""
 }
 
-#initialize a Sinequa connector instance
+# initialize a Sinequa connector instance
 sinequa=pynequa.Sinequa.from_config(config)
+
+# OR
+# you can directly instantiate Sinequa using
+sinequa = pynequa.Sinequa(
+     access_token: config["access_token"],
+     base_url: config["base_url"],
+     app_name: config["app_name"],
+     query_name: config["query_name"],
+)
 
 params = QueryParams()
 params.search_text = "<your_search_text>"
-..... #other params
+# other params
 
-#perform a search query operation
+# perform a search query operation
 results=sinequa.search_query(params)
 ```
 
