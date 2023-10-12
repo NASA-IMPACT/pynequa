@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 
 class TreeParams:
@@ -79,7 +79,7 @@ class QueryParams:
     aggregations: List[str] = []
     order_by: str = None
     group_by: str = None
-    advanced: AdvancedParams = AdvancedParams()
+    advanced: Optional[AdvancedParams] = None
 
     def __init__(self) -> None:
         pass
