@@ -1,13 +1,46 @@
 from typing import Dict, List, Optional
+from abc import abstractmethod, ABC
+from dataclasses import dataclass, field
+from loguru import logger
 
 
-class TreeParams:
+class AbstractParams(ABC):
+    """
+    Abstract base class for all Sinequa models.
+    """
+
+    @abstractmethod
+    def generate_payload(self, **kwargs) -> Dict:
+        """
+        This is abstract method for AbstractParams.
+        Every child class should implement this method.
+        """
+        raise NotImplementedError()
+
+
+@dataclass
+class TreeParams(AbstractParams):
+    """
+    Represents the parameters for configuring a tree parameters.
+
+    Attributes:
+        box (str): The name of the relevant tree navigation box (required).
+        column (str): The name of the index column associated with the
+                        navigation box (required).
+        op (str, optional): The relational operator. Default is 'eq'.
+            Possible values: '=', '!=', '<', '<=', '>=', '>', 'between', 'not between'.
+        value (str): The filter value (required).
+    """
     box: str = ""
     column: str = ""
     op: str = ""
     value: str = ""
 
-    def _generate_tree_params_payload(self) -> Dict:
+    def generate_payload(self, **kwargs) -> Dict:
+        """
+        This method generates payload for
+        TreeParams.
+        """
         return {
             "box": self.box,
             "column": self.column,
@@ -16,73 +49,94 @@ class TreeParams:
         }
 
 
-class SelectParams:
+@dataclass
+class SelectParams(AbstractParams):
     expression: str = ""
     facet: str = ""
 
-    def _generate_select_params_payload(self) -> Dict:
+    def generate_payload(self, **kwargs) -> Dict:
+        """
+        This method generates payload for
+        SelectParams.
+        """
         return {
             "expression": self.expression,
             "facet": self.facet,
         }
 
 
-class OpenParams:
+@dataclass
+class OpenParams(AbstractParams):
     expression: str = ""
     facet: str = ""
 
-    def _generate_open_params_payload(self) -> Dict:
+    def generate_payload(self, **kwargs) -> Dict:
+        """
+        This method generates payload for
+        OpenParams.
+        """
         return {
             "expression": self.expression,
             "facet": self.facet,
         }
 
 
-class AdvancedParams:
+@dataclass
+class AdvancedParams(AbstractParams):
     col_name: str = ""
-    col_value: str = ""
-    value: str = ""
-    operator: str = ""
+    col_value: str = None
+    value:  str or int = None
+    operator: str = None
+    debug: bool = False
 
-    def _generate_advanced_params_payload(self) -> Dict:
-        return {
+    def generate_payload(self, **kwargs) -> Dict:
+        """
+        This method generates payload for
+        AdvancedParams.
+        """
+        payload = {
             self.col_name: self.col_value,
             "value": self.value,
             "operator": self.operator
         }
 
+        if self.debug:
+            logger.debug(payload)
 
-class QueryParams:
+        return payload
+
+
+@dataclass
+class QueryParams(AbstractParams):
     name: str = ""  # required
-    action: str = None
+    action: Optional[str] = None
     search_text: str = ""  # required
-    select_params: List[SelectParams] = []
-    additional_select_clause: str = None
-    additional_where_clause: str = None
-    open_params: List[OpenParams] = []
-    page: int = 0
-    page_size: int = 0
-    tab: str = None
-    scope: str = None
-    basket: str = None
-    is_first_page: bool = False
-    strict_refine: bool = False
-    global_relevance: int = None
-    question_language: str = None
-    question_default_language: str = None
-    spelling_correction_mode: str = None
-    spelling_correction_filter: str = None
-    document_weight: str = None
-    text_part_weights: str = None
-    relevance_transforms: str = None
-    remove_duplicates: bool = False
-    aggregations: List[str] = []
-    order_by: str = None
-    group_by: str = None
+    select_params: Optional[List[SelectParams]
+                            ] = field(default_factory=lambda: [])
+    additional_select_clause: Optional[str] = None
+    additional_where_clause: Optional[str] = None
+    open_params: Optional[List[OpenParams]] = field(default_factory=lambda: [])
+    page: Optional[int] = 1
+    page_size: Optional[int] = 10
+    tab: Optional[str] = None
+    scope: Optional[str] = None
+    basket: Optional[str] = None
+    is_first_page: Optional[bool] = False
+    strict_refine: Optional[bool] = False
+    global_relevance: Optional[int] = None
+    question_language: Optional[str] = None
+    question_default_language: Optional[str] = None
+    spelling_correction_mode: Optional[str] = None
+    spelling_correction_filter: Optional[str] = None
+    document_weight: Optional[str] = None
+    text_part_weights: Optional[str] = None
+    relevance_transforms: Optional[str] = None
+    remove_duplicates: Optional[bool] = False
+    aggregations: Optional[List[str]] = field(default_factory=lambda: [])
+    order_by: Optional[str] = None
+    group_by: Optional[str] = None
     advanced: Optional[AdvancedParams] = None
-
-    def __init__(self) -> None:
-        pass
+    debug: bool = False
 
     def _prepare_query_args(self, query_name: str) -> Dict:
         params = {
@@ -101,7 +155,7 @@ class QueryParams:
         if len(self.select_params) > 0:
             select_params = []
             for item in self.select_params:
-                select_params.append(item._generate_select_params_payload())
+                select_params.append(item.generate_payload())
             params["select"] = self.select_params
 
         if self.additional_select_clause is not None:
@@ -113,7 +167,7 @@ class QueryParams:
         if len(self.open_params) > 0:
             open_params = []
             for item in self.open_params:
-                open_params.append(item._generate_open_params_payload())
+                open_params.append(item.generate_payload())
             params["open"] = self.open_params
 
         if self.page is not None:
@@ -169,6 +223,21 @@ class QueryParams:
             params["groupBy"] = self.group_by
 
         if self.advanced is not None:
-            params["advanced"] = self.advanced._generate_advanced_params_payload()
+            params["advanced"] = self.advanced.generate_payload()
 
         return params
+
+    def generate_payload(self, **kwargs) -> Dict:
+        """
+        This method generates payload for
+        QueryParams.
+
+        Args:
+            query_name(str): Name of query service to query for
+        """
+        query_name = kwargs.get("query_name")
+        payload = self._prepare_query_args(query_name)
+        if self.debug:
+            logger.debug(payload)
+
+        return payload

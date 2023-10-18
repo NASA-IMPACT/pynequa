@@ -111,7 +111,7 @@ class Sinequa(API):
 
         payload = {
             "app": self.app_name,
-            "query": query_params._prepare_query_args(
+            "query": query_params.generate_payload(
                 query_name=self.query_name)
         }
 
@@ -160,7 +160,7 @@ class Sinequa(API):
         payload = {
             "profile": profile_name,
             "responsetype": response_type,
-            "query": query_params._prepare_query_args(query_name=self.query_name),
+            "query": query_params.generate_payload(query_name=self.query_name),
         }
 
         return self.post(endpoint=endpoint, payload=payload)
@@ -209,7 +209,7 @@ class Sinequa(API):
             "action": action,
             "id": id,
             "origin": origin,
-            "query": query_params._prepare_query_args(
+            "query": query_params.generate_payload(
                 query_name=self.query_name)
         }
 
@@ -281,7 +281,7 @@ class Sinequa(API):
         payload = {
             "app": self.app_name,
             "sourceDocumentId": source_doc_id,
-            "query": query_params._prepare_query_args(
+            "query": query_params.generate_payload(
                 query_name=self.query_name)
         }
 
@@ -300,7 +300,7 @@ class Sinequa(API):
         endpoint = "search.querylinks"
         payload = {
             "webService": web_sevice,
-            "query": query_params._prepare_query_args(
+            "query": query_params.generate_payload(
                 query_name=self.query_name)
         }
         return self.post(endpoint=endpoint, payload=payload)
@@ -355,9 +355,9 @@ class Sinequa(API):
         endpoint = "search.profile.subtree"
         payload = {
             "profile": profile,
-            "query": query_params._prepare_query_args(
+            "query": query_params.generate_payload(
                 query_name=self.query_name),
-            "tree": tree_params._generate_tree_params_payload()
+            "tree": tree_params.generate_payload()
         }
         return self.post(endpoint=endpoint, payload=payload)
 
