@@ -1,12 +1,10 @@
 from typing import Dict, List, Optional
-from abc import abstractmethod
+from abc import abstractmethod, ABC
 from dataclasses import dataclass, field
-import logging
-
-logging.basicConfig(level=logging.DEBUG)
+from loguru import logger
 
 
-class SinequaBaseModel:
+class AbstractParams(ABC):
     """
     Abstract base class for all Sinequa models.
     """
@@ -14,14 +12,14 @@ class SinequaBaseModel:
     @abstractmethod
     def generate_payload(self, **kwargs) -> Dict:
         """
-        This is abstract method for SinequaBaseModel.
+        This is abstract method for AbstractParams.
         Every child class should implement this method.
         """
         raise NotImplementedError()
 
 
 @dataclass
-class TreeParams(SinequaBaseModel):
+class TreeParams(AbstractParams):
     """
     Represents the parameters for configuring a tree parameters.
 
@@ -52,7 +50,7 @@ class TreeParams(SinequaBaseModel):
 
 
 @dataclass
-class SelectParams(SinequaBaseModel):
+class SelectParams(AbstractParams):
     expression: str = ""
     facet: str = ""
 
@@ -68,7 +66,7 @@ class SelectParams(SinequaBaseModel):
 
 
 @dataclass
-class OpenParams(SinequaBaseModel):
+class OpenParams(AbstractParams):
     expression: str = ""
     facet: str = ""
 
@@ -84,7 +82,7 @@ class OpenParams(SinequaBaseModel):
 
 
 @dataclass
-class AdvancedParams(SinequaBaseModel):
+class AdvancedParams(AbstractParams):
     col_name: str = ""
     col_value: str = None
     value:  str or int = None
@@ -103,13 +101,13 @@ class AdvancedParams(SinequaBaseModel):
         }
 
         if self.debug:
-            logging.debug(payload)
+            logger.debug(payload)
 
         return payload
 
 
 @dataclass
-class QueryParams(SinequaBaseModel):
+class QueryParams(AbstractParams):
     name: str = ""  # required
     action: Optional[str] = None
     search_text: str = ""  # required
@@ -240,6 +238,6 @@ class QueryParams(SinequaBaseModel):
         query_name = kwargs.get("query_name")
         payload = self._prepare_query_args(query_name)
         if self.debug:
-            logging.debug(payload)
+            logger.debug(payload)
 
         return payload
