@@ -156,7 +156,7 @@ class QueryParams(AbstractParams):
             select_params = []
             for item in self.select_params:
                 select_params.append(item.generate_payload())
-            params["select"] = self.select_params
+            params["select"] = select_params
 
         if self.additional_select_clause is not None:
             params["additionalSelectClause"] = self.additional_select_clause
@@ -168,7 +168,7 @@ class QueryParams(AbstractParams):
             open_params = []
             for item in self.open_params:
                 open_params.append(item.generate_payload())
-            params["open"] = self.open_params
+            params["open"] = open_params
 
         if self.page is not None:
             params["page"] = self.page
