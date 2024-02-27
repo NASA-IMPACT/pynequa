@@ -31,6 +31,7 @@ class TreeParams(AbstractParams):
             Possible values: '=', '!=', '<', '<=', '>=', '>', 'between', 'not between'.
         value (str): The filter value (required).
     """
+
     box: str = ""
     column: str = ""
     op: str = ""
@@ -85,7 +86,7 @@ class OpenParams(AbstractParams):
 class AdvancedParams(AbstractParams):
     col_name: str = ""
     col_value: str = None
-    value:  str or int = None
+    value: str or int = None
     operator: str = None
     debug: bool = False
 
@@ -96,9 +97,12 @@ class AdvancedParams(AbstractParams):
         """
         payload = {
             self.col_name: self.col_value,
-            "value": self.value,
-            "operator": self.operator
         }
+
+        if self.value:
+            payload["value"] = self.value
+        if self.operator:
+            payload["operator"] = self.operator
 
         if self.debug:
             logger.debug(payload)
@@ -111,8 +115,7 @@ class QueryParams(AbstractParams):
     name: str = ""  # required
     action: Optional[str] = None
     search_text: str = ""  # required
-    select_params: Optional[List[SelectParams]
-                            ] = field(default_factory=lambda: [])
+    select_params: Optional[List[SelectParams]] = field(default_factory=lambda: [])
     additional_select_clause: Optional[str] = None
     additional_where_clause: Optional[str] = None
     open_params: Optional[List[OpenParams]] = field(default_factory=lambda: [])
