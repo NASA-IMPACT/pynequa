@@ -84,8 +84,36 @@ class OpenParams(AbstractParams):
 
 @dataclass
 class AdvancedParams(AbstractParams):
-    col_name: str = ""
-    col_value: str = None
+    """
+    AdvancedParams represents the elemental advanced params.
+    Remember following things:
+
+        1. col_name is required.
+        2. col_value has to be either "str" or "List[str]".
+        3. if col_value is not present, the value could be a dict of
+            "value" and "operator".
+
+
+    Example:
+        "advanced": {
+            "docformat": [
+                "ppt",
+                "pdf"
+            ],
+            "modified": [
+                {
+                "value": "2019-01-01",
+                "operator": ">="
+                },
+                {
+                "value": "2019-12-31",
+                "operator": "<="
+                }
+            ]
+        }
+    """
+    col_name: str
+    col_value: str or List[str] = None
     value: str or int = None
     operator: str = None
     debug: bool = False
@@ -99,10 +127,11 @@ class AdvancedParams(AbstractParams):
         # To prevent payloads with empty values
         if self.col_name and self.col_value:
             payload[self.col_name] = self.col_value
-        if self.value:
-            payload["value"] = self.value
-        if self.operator:
-            payload["operator"] = self.operator
+        if self.value and self.operator:
+            payload[self.col_name] = {
+                "value": self.value,
+                "operator": self.operator
+            }
 
         if self.debug:
             logger.debug(payload)
@@ -115,7 +144,8 @@ class QueryParams(AbstractParams):
     name: str = ""  # required
     action: Optional[str] = None
     search_text: str = ""  # required
-    select_params: Optional[List[SelectParams]] = field(default_factory=lambda: [])
+    select_params: Optional[List[SelectParams]
+                            ] = field(default_factory=lambda: [])
     additional_select_clause: Optional[str] = None
     additional_where_clause: Optional[str] = None
     open_params: Optional[List[OpenParams]] = field(default_factory=lambda: [])
@@ -138,7 +168,8 @@ class QueryParams(AbstractParams):
     aggregations: Optional[List[str]] = field(default_factory=lambda: [])
     order_by: Optional[str] = None
     group_by: Optional[str] = None
-    advanced: Optional[AdvancedParams] = None
+    advanced: Optional[List[AdvancedParams]] = field(
+        default_factory=lambda: [])
     debug: bool = False
 
     def _prepare_query_args(self, query_name: str) -> Dict:
@@ -225,8 +256,21 @@ class QueryParams(AbstractParams):
         if self.group_by is not None:
             params["groupBy"] = self.group_by
 
-        if self.advanced is not None:
-            params["advanced"] = self.advanced.generate_payload()
+        if len(self.advanced) > 0:
+            advanced_param_payload = {}
+            for advanced_param in self.advanced:
+                column_name = advanced_param.col_name
+                payload_value = advanced_param.generate_payload()[column_name]
+                if column_name in advanced_param_payload:
+                    advanced_param_payload[column_name].append(
+                        payload_value
+                    )
+                elif isinstance(payload_value, dict):
+                    advanced_param_payload[column_name] = [payload_value]
+                else:
+                    advanced_param_payload[column_name] = payload_value
+
+            params["advanced"] = advanced_param_payload
 
         return params
 

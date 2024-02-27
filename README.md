@@ -13,7 +13,7 @@ A python library to handle communication with Sinequa REST API.
 ```
 
 ## Example Usage
-```
+```python
 import pynequa
 from pynequa.models import QueryParams
 
