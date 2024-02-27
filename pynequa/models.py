@@ -95,10 +95,10 @@ class AdvancedParams(AbstractParams):
         This method generates payload for
         AdvancedParams.
         """
-        payload = {
-            self.col_name: self.col_value,
-        }
-
+        payload = {}
+        # To prevent payloads with empty values
+        if self.col_name and self.col_value:
+            payload[self.col_name] = self.col_value
         if self.value:
             payload["value"] = self.value
         if self.operator:
