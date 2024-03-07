@@ -151,6 +151,7 @@ class QueryParams(AbstractParams):
     open_params: Optional[List[OpenParams]] = field(default_factory=lambda: [])
     page: Optional[int] = 1
     page_size: Optional[int] = 10
+    sort: Optional[str] = None
     tab: Optional[str] = None
     scope: Optional[str] = None
     basket: Optional[str] = None
@@ -213,6 +214,9 @@ class QueryParams(AbstractParams):
             params["pageSize"] = self.page_size
         else:
             params["pageSize"] = self.page_size
+
+        if self.sort is not None:
+            params["sort"] = self.sort
 
         if self.tab is not None:
             params["tab"] = self.tab
