@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union, Literal
 from abc import abstractmethod, ABC
 from dataclasses import dataclass, field
 from loguru import logger
@@ -292,4 +292,70 @@ class QueryParams(AbstractParams):
         if self.debug:
             logger.debug(payload)
 
+        return payload
+
+
+@dataclass
+class AlertParams(AbstractParams):
+    """
+    AlertParams define the set of parameters available
+    to configure an alert or update it.
+    """
+    name: str
+    description: Optional[str] = None
+    profile: Optional[str] = None
+    timezone: Optional[str] = None
+    frequency: Optional[Literal["daily", "hourly",
+                                "immediate", "weekly", "monthly"]] = "daily"
+    days: Optional[str] = None
+    alert_from: Optional[str] = None
+    alert_to: Optional[str] = None
+    times: Optional[str] = None  # format: HH:mm
+    active: bool = False
+    combine_with_other_alerts: bool = False
+    respect_tab_selection: bool = False
+    debug: bool = False
+
+    def _prepare_alert_params_payload(self) -> Dict:
+        params = {
+            "name": self.name,
+            "active": self.active,
+            "combineWithOtherAlerts": self.combine_with_other_alerts,
+            "respectTabSelection": self.respect_tab_selection
+        }
+
+        if self.description is not None:
+            params["description"] = self.description
+
+        if self.profile is not None:
+            params["profile"] = self.profile
+
+        if self.timezone is not None:
+            params["timezone"] = self.timezone
+
+        if self.frequency is not None:
+            params["frequency"] = self.frequency
+
+        if self.days is not None:
+            params["days"] = self.days
+
+        if self.alert_from is not None:
+            params["from"] = self.alert_from
+
+        if self.alert_to is not None:
+            params["to"] = self.alert_to
+
+        if self.times is not None:
+            params["times"] = self.times
+
+        return params
+
+    def generate_payload(self, **kwargs) -> Dict:
+        """
+        This method generates payload for
+        AlertParams.
+        """
+        payload = self._prepare_alert_params_payload()
+        if self.debug:
+            logger.debug(payload)
         return payload
