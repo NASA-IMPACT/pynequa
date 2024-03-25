@@ -1,8 +1,8 @@
 from __future__ import annotations
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Literal
 
 from pynequa.api import API
-from pynequa.models import QueryParams, TreeParams
+from pynequa.models import QueryParams, TreeParams, AlertParams
 
 
 class Sinequa(API):
@@ -361,38 +361,153 @@ class Sinequa(API):
         }
         return self.post(endpoint=endpoint, payload=payload)
 
-    def search_alerts(self):
+    def search_alerts(self, action: Literal["list", "create", "read", "update", "delete"],
+                      alert: AlertParams,
+                      name: Optional[str] = "", old_name: Optional[str] = ""):
         '''
+        This method makes it possible to manage alerts in search.alerts endpoint.
+        Args:
+            action(str): action name, options: [list, create, read, update, delete]
+            alert_params(AlertParams): parameters for alert configuration
+            name(str): name of alert to be read [OPTIONAL]
+            old_name(str): name of alert before you change it [OPTIONAL]
+        Returns:
+            Dict: returns a JSON response with listing alerts
         '''
         endpoint = "search.alerts"
-        pass
+        payload = {
+            "action": action,
+            "alert": alert.generate_payload(),
+            "name": name,
+            "oldName": old_name
+        }
+        return self.post(endpoint=endpoint, payload=payload)
 
-    def search_baskets(self):
+    def search_baskets(self, action: Literal["list", "get", "create", "delete",
+                                             "update", "adddocs", "deletedocs"],
+                       name: Optional[str] = None,
+                       new_name: Optional[str] = None,
+                       id: Optional[str] = None) -> Dict:
         '''
+        This method makes it possible to manage baskets.
+        Args:
+            action(str): action name, options: [list, get, create, delete, update, adddocs, deletedocs]
+            name(str): sets the name of basket [OPTIONAL]
+            new_name(str): new name of basket [OPTIONAL]
+            id(str): list ids of documents to be added or deleted from basket [OPTIONAL]
+        Returns:
+            Dict: returns a JSON response
         '''
         endpoint = "search.baskets"
-        pass
+        payload = {
+            "action": action,
+        }
+        if name is not None:
+            payload["name"] = name
+        if new_name is not None:
+            payload["newName"] = new_name
+        if id is not None:
+            payload["id"] = id
 
-    def search_labels(self):
+        return self.post(endpoint=endpoint, payload=payload)
+
+    def search_labels(self, action: Literal["list", "add", "remove", "rename",
+                                            "delete", "bulkAdd", "bulkRemove"],
+                      q: Optional[str] = None,
+                      id: Optional[str] = None,
+                      labels: Optional[str] = None,
+                      new_label: Optional[str] = None,
+                      public: Optional[bool] = False,
+                      query: Optional[str] = None) -> Dict:
         '''
+        This method makes it possible to manage labels.
+
+        Args:
+            action(str): action name, options: [list, add, remove, rename, delete, bulkAdd, bulkRemove]
+            q(str): label prefix
+            id(str): document id(s)
+            labels(str): name of labels to be added, removed etc
+            new_label(str): new name of label
+            public(bool): whether labels are public or not
+            query(str): query string
+        Returns:
+            Dict: returns a JSON response
         '''
         endpoint = "search.labels"
-        pass
+        payload = {
+            "action": action,
+            "public": public
+        }
+        if q is not None:
+            payload["q"] = q
+        if id is not None:
+            payload["id"] = id
+        if labels is not None:
+            payload["labels"] = labels
+        if new_label is not None:
+            payload["newLabel"] = new_label
+        if public is not None:
+            payload["public"] = public
+        if query is not None:
+            payload["query"] = query
+        return self.post(endpoint=endpoint, payload=payload)
 
-    def search_saved_queries(self):
+    def search_saved_queries(self, action: Literal["list", "get", "set", "delete"],
+                             name: Optional[str] = None,
+                             saved_query: Optional[Dict] = None) -> Dict:
         '''
+        Manage saved queries.
+
+        Args:
+            action(str): action name, options: [list, get, set, delete]
+            name(str): name of saved query
+            saved_query(Dict): parameters of new saved query to be created.
         '''
         endpoint = "search.savedQueries"
-        pass
+        payload = {
+            "action": action,
+        }
 
-    def search_suggest(self):
+        if name is not None:
+            payload["name"] = name
+        if saved_query is not None:
+            payload["savedQuery"] = saved_query
+        return self.post(endpoint=endpoint, payload=payload)
+
+    def search_suggest(self, app: str, profile: str, suggestion_query: str,
+                       text: str, filter: Optional[Dict] = None,
+                       kinds: Optional[List[str]] = None,
+                       show_source: Optional[bool] = False) -> Dict:
         '''
+        Manage auto complete suggestions
+
+        Args:
+            app(str): name of SBA application
+            profile(str): name of profile
+            suggestion_query(str): name of suggestion query to be used
+            text(str): text to be searche for
+            filter(Dict):  key/value pairs to filter
+            kinds(List[str]): kinds of suggestions
+            show_source(bool): returns name of index column when True
         '''
         endpoint = "search.suggest"
-        pass
+        payload = {
+            "app": app,
+            "profile": profile,
+            "suggestionQuery": suggestion_query,
+            "text": text,
+            "showSource": show_source,
+        }
+        if filter is not None:
+            payload["filter"] = filter
+        if kinds is not None:
+            payload["kinds"] = kinds
+        return self.post(endpoint=endpoint, payload=payload)
 
     def search_custom(self):
         '''
+        Define and run customized search on indexes.
+        Warning: Requires Admin privileges.
         '''
         endpoint = "search.custom"
         pass
