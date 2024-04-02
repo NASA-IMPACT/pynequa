@@ -1,4 +1,4 @@
-from pynequa.models import QueryParams, AdvancedParams
+from pynequa.models import QueryParams, AdvancedParams, AlertParams
 import unittest
 import logging
 import json
@@ -84,6 +84,35 @@ class TestQueryParams(unittest.TestCase):
         }
 
         assert payload["advanced"] == expected_payload
+
+
+class TestAlertParams(unittest.TestCase):
+
+    def test_alert_params_payload(self):
+        """
+            Test if alert params payload is correctly
+            generated or not.
+        """
+        ap = AlertParams(
+            name="TestAlert",
+            description="This is a test alert",
+            frequency="hourly",
+            combine_with_other_alerts=True,
+            respect_tab_selection=True,
+        )
+
+        generated_payload = ap.generate_payload()
+
+        expected_payload = {
+            "name": "TestAlert",
+            "description": "This is a test alert",
+            "frequency": "hourly",
+            "active": False,
+            "combineWithOtherAlerts": True,
+            "respectTabSelection": True
+        }
+
+        assert generated_payload == expected_payload
 
 
 if __name__ == '__main__':

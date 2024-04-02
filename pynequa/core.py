@@ -2,7 +2,12 @@ from __future__ import annotations
 from typing import Optional, List, Dict, Literal
 
 from pynequa.api import API
-from pynequa.models import QueryParams, TreeParams, AlertParams
+from pynequa.models import (
+    QueryParams,
+    TreeParams,
+    AlertParams,
+    CustomSearchParams
+)
 
 
 class Sinequa(API):
@@ -504,19 +509,41 @@ class Sinequa(API):
             payload["kinds"] = kinds
         return self.post(endpoint=endpoint, payload=payload)
 
-    def search_custom(self):
+    def search_custom(self, params: CustomSearchParams) -> Dict:
         '''
         Define and run customized search on indexes.
         Warning: Requires Admin privileges.
         '''
         endpoint = "search.custom"
-        pass
+        payload = params.generate_payload()
+        return self.post(endpoint=endpoint, payload=payload)
 
-    def suggest_field(self):
+    def suggest_field(self,  profile: str, action: str = Literal["suggests", "defaultFields"],
+                      fields: List[str] = [],
+                      text: str = "") -> Dict:
         '''
+        suggest_field provides a suggestion for a fielded search.
+
+        Args:
+            profile(str): name of profile
+            action(str): action to be performed
+            fields(List[str]): list of fields for suggestions (required with action=suggests)
+            text(str): text to be searched for suggestions (required with action=suggests)
+        Returns:
+            Dict: response for suggest field
         '''
         endpoint = "suggestField"
-        pass
+        payload = {
+            "profile": profile,
+            "app": self.app_name,
+            "action": action,
+        }
+
+        if action == "suggests":
+            payload["fields"] = fields
+            payload["text"] = text
+
+        return self.post(endpoint=endpoint, payload=payload)
 
     def engine_sql(self, sql: str, max_rows: int = 1000) -> Dict:
         '''
