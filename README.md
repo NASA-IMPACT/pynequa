@@ -67,13 +67,13 @@ Implement following REST endpoints to manage requests with Sinequa API.
 - [x] search.ratings
 - [x] search.profile.subtree
 - [x] engine.sql
-- [ ] search.alerts
-- [ ] search.baskets
-- [ ] search.labels
-- [ ] serach.savedQueries
-- [ ] search.suggest
-- [ ] search.custom
-- [ ] suggestField
+- [x] search.alerts
+- [x] search.baskets
+- [x] search.labels
+- [x] serach.savedQueries
+- [x] search.suggest
+- [x] search.custom
+- [x] suggestField
 
 **Indexing Endpoints**
 - [ ] indexing.collection
